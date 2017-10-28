@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src = "js/tabletop.js"></script>
+    <script type="text/javascript">
+      
+
+
+      /* Load the data using Tabletop */
+      window.onload = function() {init()};
+
+      var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/14OOs0v17bDQsacuf_ZUfImARp2WmSrfFFfIFEgAxgpw/edit?usp=sharing';
+
+      function init() {
+        Tabletop.init( { key: publicSpreadsheetUrl,
+                         callback: showInfo,
+                         simpleSheet: true } )
+      };
+
+      /* Draw the chart */
+      function showInfo(data, tabletop) {
+        
+      google.charts.load('current', {'packages':['line', 'corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var chart_data = new google.visualization.DataTable();
+        chart_data.addColumn('string', 'Year');
+        chart_data.addColumn('number', 'Population');
+        chart_data.addColumn('number', 'flats_built');
+
+        data.forEach(function(data){
+          array = [data.Year, Number(data.Population), Number(data.flats_built)];
+          chart_data.addRow(array);
+        });
+        
+
+        var options = {
+          title: 'Singapore population and flats built',
+          legend: { position: 'bottom' },
+          series: {
+            // Give each series an axis name
+            0: {axis: 'Population'},
+            1: {axis: 'Flats_Built'}
+
+          },
+          axes: {
+            //Adds labels to each axis
+            y: {
+              Population: {label: 'Population'},
+              Flats_Built: {label: 'No of flats built'}  
+            }
+          }
+        };
+
+        var chart = new google.charts.Line(document.getElementById('line_chart'));
+
+        chart.draw(chart_data, options);
+      }
+
+      };
+
+      
+    </script>
+  </head>
+  <body>
+    <div id="line_chart" style="width: 900px; height: 500px"></div>
+  </body>
+</html>
